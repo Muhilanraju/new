@@ -1,1 +1,40 @@
 Chat Screen
+
+const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+
+const app = express();
+app.use(cors());
+app.use(bodyParser.json());
+
+// Temporary in-memory chat storage
+let messages = [];
+
+// Send message API
+app.post("/api/chat/send", (req, res) => {
+  const { sender, receiver, message } = req.body;
+
+  const chatMessage = {
+    sender,
+    receiver,
+    message,
+    time: new Date()
+  };
+
+  messages.push(chatMessage);
+  res.status(200).json({
+    status: "Message sent",
+    data: chatMessage
+  });
+});
+
+// Get messages API
+app.get("/api/chat/messages", (req, res) => {
+  res.status(200).json(messages);
+});
+
+app.listen(3000, () => {
+  console.log("Chat API running on http://localhost:3000");
+});
+
